@@ -1,0 +1,19 @@
+{
+  "folders": [
+    {
+      "path": "../js-ts-monorepos"
+    },
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.associations": {
+      "api-extractor*.json": "jsonc"
+    },
+    "eslint.workingDirectories": [
+      { "directory": "packages/types", "changeProcessCWD": true },
+      { "directory": "packages/utils", "changeProcessCWD": true }
+    ]
+  }
+}
