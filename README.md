@@ -601,6 +601,22 @@ yarn lerna add @mr/types --scope=@mr/utils
 
 19th December, 2020
 
-### Lerna Publish and Verdaccion
+### Lerna Publish and Verdaccio
 
 [Verdaccio](https://verdaccio.org/en/) is a local npm proxy we can use locally.
+
+```bash
+yarn add -WD verdaccio
+```
+
+```bash
+yarn verdaccio
+```
+
+A npm repository is now available at `http://localhost:4873/`
+
+Now we need to configure our registry create a `.npmrc` file with:
+
+```
+registry=http://localhost:4873
+```
