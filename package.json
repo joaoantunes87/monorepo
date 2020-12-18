@@ -16,7 +16,11 @@
     ]
   },
   "scripts": {
-    "start:spa": "cd packages/spa && yarn start"
+    "start:spa": "cd packages/spa && yarn start",
+    "graph:specs": "npx lerna-dependency-graph -o dependency-graph.dot",
+    "graph:png": "yarn graphviz -Tpng -odependency-graph.dot.png dependency-graph.dot",
+    "graph:preview": "open-cli dependency-graph.dot.png",
+    "graph": "yarn graph:specs && yarn graph:png && yarn graph:preview"
   },
   "volta": {
     "node": "14.15.1",
@@ -25,8 +29,12 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.10.0",
     "@typescript-eslint/parser": "^4.10.0",
+    "canvas": "^2.6.1",
     "eslint": "^7.15.0",
+    "graphviz-cli": "^1.0.0",
     "lerna": "^3.22.1",
+    "lerna-dependency-graph": "^1.0.2",
+    "open-cli": "^6.0.1",
     "rimraf": "^3.0.2",
     "verdaccio": "^4.10.0"
   }

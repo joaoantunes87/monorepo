@@ -999,3 +999,43 @@ I have changed the `worksapces` property in our root `package.json` to:
 ]
 }
 </pre>
+
+#### Graph depedencies
+
+https://www.npmjs.com/package/lerna-dependency-graph
+
+No sure why by if I install `lerna-dependency-graph` and try to use it like:
+
+```bash
+yarn lerna-dependency-graph
+```
+
+I have the following error:
+
+```bash
+env: node\r: No such file or directory
+```
+
+But if I use the following, it works well:
+
+```
+npx lerna-dependency-graph
+```
+
+I will use this, so far.
+
+https://www.npmjs.com/package/graphviz-cli
+
+```
+yarn add -WD graphviz-cli canvas open-cli
+```
+
+<pre>
+  "scripts": {
+    ...
+    "graph:specs": "npx lerna-dependency-graph -o dependency-graph.dot",
+    "graph:png": "yarn graphviz -Tpng -odependency-graph.dot.png dependency-graph.dot",
+    "graph:preview": "open dependency-graph.dot.png",
+    "graph": "yarn graph:specs && yarn graph:png && yarn graph:preview"
+  },
+</pre>

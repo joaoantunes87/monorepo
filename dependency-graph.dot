@@ -1,0 +1,11 @@
+digraph G {
+  "@mr/mobile" [ style = "dashed" ];
+  "@mr/types";
+  "@mr/utils";
+  "@mr/spa" [ style = "dashed" ];
+  "@mr/mobile" -> "@mr/types";
+  "@mr/mobile" -> "@mr/utils";
+  "@mr/spa" -> "@mr/types";
+  "@mr/spa" -> "@mr/utils";
+  "@mr/utils" -> "@mr/types";
+}
