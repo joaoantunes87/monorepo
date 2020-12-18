@@ -5,9 +5,9 @@
   "author": "João Antunes",
   "license": "MIT",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "scripts": {
+    "start:spa": "cd packages/spa && yarn start"
+  },
   "volta": {
     "node": "14.15.1",
     "yarn": "1.22.10"
