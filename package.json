@@ -5,6 +5,11 @@
   "author": "João Antunes",
   "license": "MIT",
   "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
   "scripts": {
     "start:spa": "cd packages/spa && yarn start"
   },
