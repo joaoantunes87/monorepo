@@ -814,7 +814,9 @@ Next I will try the some for a react-native application.
 
 21th December, 2020
 
-#### Mobile Application
+#### Create React Native Application
+
+Here I am going to create a react-native application with the typescript template. I should be as easy as:
 
 ```bash
 cd packages
@@ -824,10 +826,21 @@ cd packages
 npx react-native init mobile --template react-native-template-typescript
 ```
 
-Problems in iOS:
-NO HOIST
+However after this you will see some problems on the ios application. It is not able to install dependencies on ios application.
 
-````json
+It happens due to the way workspaces store dependencies, saving the common dependencies on the root `node_modules` and not in each package.
+
+For ios application the configurations for dependencies expect a relative path for node_modules folder, something like:
+
+```
+
+```
+
+After digging a while I found it is a solved problem, with a simples solution. We need to configure react-native dependencies to not be hoisted by our workspace and be stored in the local `node_modules`. This [article](https://classic.yarnpkg.com/blog/2018/02/15/nohoist/), explains it very well..
+
+I changed the `worksapces` property in our root `package.json` to:
+
+<pre>
 "workspaces": {
 "packages": [
 "packages/*"
@@ -836,17 +849,24 @@ NO HOIST
 "**/react-native",
 "**/react-native/**"
 ]
-},```
+}
+</pre>
 
-https://classic.yarnpkg.com/blog/2018/02/15/nohoist/
+And try to create the react nartive application again. After a while it is created and we should be ready to start our new mobile application.
 
-Lets update `packages/spa/package.json` name:
+I just update `packages/mobile/package.json` name:
 
 ```json
 "name": "@mr/mobile",
-````
+```
 
-Lets add our internal libraries:
+For now I am going to run it directly on `packages/mobile`:
+
+```bash
+yarn ios
+```
+
+I can see the boilerpla application. I am now going to add our `types` and `utils` libraries to show our books information as we did in our web application [here](react-webapp-monorepo):
 
 ```bash
 yarn lerna add @mr/utils --scope=@mr/mobile
@@ -858,19 +878,45 @@ Followed by
 yarn lerna add @mr/types --scope=@mr/mobile
 ```
 
-Watchman problem:
+After that my application stops working while trying to auto reload, when I change some application code. It happens due to watchman not being able to reload `linked` application with `yarn`, done by lerna when application are installed:
 
-Enters WML
-https://github.com/wix/wml
+<pre>
+error: Error: Unable to resolve module `@babel/runtime/helpers/interopRequireDefault` from `App.tsx`: @babel/runtime/helpers/interopRequireDefault could not be found within the project.
 
+If you are sure the module exists, try these steps:
+ 1. Clear watchman watches: watchman watch-del-all
+ 2. Delete node_modules: rm -rf node_modules and run yarn install
+ 3. Reset Metro's cache: yarn start --reset-cache
+ 4. Remove the cache: rm -rf /tmp/metro-*
+    at ModuleResolver.resolveDependency (/Users/nb24696/Experiments/my-mono-repo/packages/mobile/node_modules/metro/src/node-haste/DependencyGraph/ModuleResolution.js:186:15)
+    at ResolutionRequest.resolveDependency (/Users/nb24696/Experiments/my-mono-repo/packages/mobile/node_modules/metro/src/node-haste/DependencyGraph/ResolutionRequest.js:52:18)
+    at DependencyGraph.resolveDependency (/Users/nb24696/Experiments/my-mono-repo/packages/mobile/node_modules/metro/src/node-haste/DependencyGraph.js:287:16)
+    at Object.resolve (/Users/nb24696/Experiments/my-mono-repo/packages/mobile/node_modules/metro/src/lib/transformHelpers.js:267:42)
+    at /Users/nb24696/Experiments/my-mono-repo/packages/mobile/node_modules/metro/src/DeltaBundler/traverseDependencies.js:434:31
+    at Array.map (<anonymous>)
+    at resolveDependencies (/Users/nb24696/Experiments/my-mono-repo/packages/mobile/node_modules/metro/src/DeltaBundler/traverseDependencies.js:431:18)
+    at /Users/nb24696/Experiments/my-mono-repo/packages/mobile/node_modules/metro/src/DeltaBundler/traverseDependencies.js:275:33
+    at Generator.next (<anonymous>)
+    at asyncGeneratorStep (/Users/nb24696/Experiments/my-mono-repo/packages/mobile/node_modules/metro/src/DeltaBundler/traverseDependencies.js:87:24)
+    </pre>
+
+I was expecting this problem, because I has happened to me in a project I am working on. There I am using [WML](https://github.com/wix/wml) to solve the problem, and it works very well. However, it required some setup and an external tool:
+
+```bash
 wml add packages/utils packages/mobile/node_modules/@mr/utils
+```
 
-wml add packages/types packages/mobile/node_modules/@mr/types
+```bash
+wml add packages/utils packages/mobile/node_modules/@mr/types
+```
 
-See if I can automate it with
-https://www.npmjs.com/package/react-native-yarn-workspaces/v/1.0.8?activeTab=readme
+```bash
+wml start
+```
 
-Another solution and easier to mantain is to tell watchman to look for our packages. We can do it updating `metro.config.js`:
+For this case, I found another solution, that I think it is a better automation here, and improve the developer experience. This solution is easier to mantain.
+
+The solution is to tell `watchman` to look for our packages. We can do it updating `metro.config.js`:
 
 <pre>
 /**
@@ -898,19 +944,11 @@ module.exports = {
 };
 </pre>
 
-I have go this ideia [here](https://medium.com/@dushyant_db/how-to-use-lerna-with-react-native-1eaa79b5d8ec)
+I have got this ideia [here](https://medium.com/@dushyant_db/how-to-use-lerna-with-react-native-1eaa79b5d8ec). We will need to restart the application for metro to get those configuration.
+
+After having the application started again, I have changed the `packages/mobile/serc/App.tsx` to use our `@mr/utils` and `@mr/types` packages. The application has reloaded with those modifications well:
 
 <pre>
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
 import React from 'react';
 import {SafeAreaView, ScrollView, View, Text, StatusBar} from 'react-native';
 
@@ -941,5 +979,23 @@ const App = () => {
 };
 
 export default App;
+</pre>
 
+We are now able to update our `packages` and having it reload immediately. We just need to remember to rebuild `packages` after our changes.
+
+After adding the react-native application I have also found some conflicts on dependency versions in different packages, in this case, in our `spa` in regard to `babel-jest`, when we try to `build` it. Due to the way `create-react-app` works I am not able to change the version of `babel-jest` directly without ejecting it. I havef added `babel-jest` to not be hoisted. I have also removed all `node_modules` manually execute `yarn`.
+
+I have changed the `worksapces` property in our root `package.json` to:
+
+<pre>
+"workspaces": {
+"packages": [
+"packages/*"
+],
+"nohoist": [
+"**/react-native",
+"**/react-native/**",
+"**/babel-jest"
+]
+}
 </pre>
