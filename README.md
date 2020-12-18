@@ -620,3 +620,326 @@ Now we need to configure our registry create a `.npmrc` file with:
 ```
 registry=http://localhost:4873
 ```
+
+We need to create Verdaccio user to be able to publish packages to our repository. Create it and then do:
+
+```bash
+yarn login
+```
+
+We should now be able to publish our packages with lerna using:
+
+```bash
+yarn lerna publish from-package
+```
+
+Not sure why, but I needed to setup the git repository and before any publish lerna ask me to commit any change, which makes sense.
+
+After trying the command I had some problems authenticating in my local registry, lerna was always trying to publish on npm registry.
+
+After a while I tried the following, explicitly configuring my local registry:
+
+```bash
+yarn lerna publish from-package --yes --registry http://localhost:4873
+```
+
+It worked, and now I have the artifacts on my local verdaccio repository. Another solution, would be Nexus. I have used it in the past, however it requires more work to set up. I will keep experimenting with Verdaccio.
+
+Also, some work need to be done to have it working smoothly in Continuos Integration, Delivery and Deployment environment.
+
+20th December, 2020
+
+#### Web Application
+
+```bash
+cd packages
+```
+
+```bash
+npx create-react-app spa
+```
+
+Lets update `packages/spa/package.json` name:
+
+```json
+"name": "@mr/spa",
+```
+
+At our root `package.json` at `scripts` add:
+
+```json
+  "scripts": {
+    "start:spa": "cd packages/spa && yarn start"
+  },
+```
+
+Lets add our internal libraries:
+
+```bash
+yarn lerna add @mr/types @mr/utils --scope=@mr/spa
+```
+
+I was expecting it to work, however it fails. For, what I see it is only possible to add a library as dependency at a time, using lerna. I read more about it [here](https://github.com/lerna/lerna/issues/2004)
+
+Experiment with
+
+```bash
+yarn lerna add @mr/utils --scope=@mr/spa
+```
+
+Followed by
+
+```bash
+yarn lerna add @mr/types --scope=@mr/spa
+```
+
+In this case, we have created our react-app with javascript, so `@mr/types` will not be very useful.
+
+Lets start using our books in our React Application. Go to `packages/spa/src/App.js` and update it to:
+
+<pre>
+import { allBooks } from "@mr/utils";
+
+function App() {
+  return (
+    <div>
+      <h1>List of Books</h1>
+      <ul>
+        {allBooks().map(function renderBook(book) {
+          return (
+            <li key={book.id}>
+              {book.title} from {book.author}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
+</pre>
+
+Now lets do a change on `@mr/utils` and check if we get it. Lets add a `tag` property to our books. We will need to change `@mr/types` as well.
+
+On `@mr/types` I have updated `src/Book.ts` to:
+
+<pre>
+export interface IBook {
+  id: string;
+  title: string;
+  author: string;
+  tag?: string;
+}
+
+export function bookToString(book: IBook): string {
+  return `${book.title}`;
+}
+</pre>
+
+`tag` was added as an optional property to `IBook` interface, representing our books.
+
+Now, lets go to `@mr/utils`. I update `books` array at `src/booksService.ts` with a `tag` for each book:
+
+<pre>
+const books: IBook[] = [
+  {
+    id: "1",
+    title: "Clean Code",
+    author: "Uncle Bob",
+    tag: "Software",
+  },
+  {
+    id: "2",
+    title: "The Pragmatic Programmer",
+    author: "Andy Hunt and Dave Thomas",
+    tag: "Software",
+  },
+];
+</pre>
+
+However we see VSCode is warning us with an error. I am going to execute `lint`:
+
+```bash
+yarn lerna run lint
+```
+
+No error was found.
+
+Ok. We are going to link all of our dependencies:
+
+```bash
+yarn lerna bootstrap
+```
+
+`Already up-to-date.`
+
+We changed it `@mr/types` and `@mr/utils`. We need to rebuild it:
+
+```bash
+yarn lerna run build
+```
+
+And now errors disappeared. We will want to automate this processo to improve the Developer Experience. I will do it later.
+
+For now, lets go back to our Single Page Application in React and show `tag` for each book. Our `packages/spa/src/App.js`:
+
+<pre>
+import { allBooks } from "@mr/utils";
+
+function App() {
+  return (
+    <div>
+      <h1>List of Books</h1>
+      <ul>
+        {allBooks().map(function renderBook(book) {
+          return (
+            <li key={book.id}>
+              {book.title} from {book.author} about {book.tag || ""}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
+
+</pre>
+
+And it was updated on `http://localhost:3000`
+
+Next I will try the some for a react-native application.
+
+21th December, 2020
+
+#### Mobile Application
+
+```bash
+cd packages
+```
+
+```bash
+npx react-native init mobile --template react-native-template-typescript
+```
+
+Problems in iOS:
+NO HOIST
+
+````json
+"workspaces": {
+"packages": [
+"packages/*"
+],
+"nohoist": [
+"**/react-native",
+"**/react-native/**"
+]
+},```
+
+https://classic.yarnpkg.com/blog/2018/02/15/nohoist/
+
+Lets update `packages/spa/package.json` name:
+
+```json
+"name": "@mr/mobile",
+````
+
+Lets add our internal libraries:
+
+```bash
+yarn lerna add @mr/utils --scope=@mr/mobile
+```
+
+Followed by
+
+```bash
+yarn lerna add @mr/types --scope=@mr/mobile
+```
+
+Watchman problem:
+
+Enters WML
+https://github.com/wix/wml
+
+wml add packages/utils packages/mobile/node_modules/@mr/utils
+
+wml add packages/types packages/mobile/node_modules/@mr/types
+
+See if I can automate it with
+https://www.npmjs.com/package/react-native-yarn-workspaces/v/1.0.8?activeTab=readme
+
+Another solution and easier to mantain is to tell watchman to look for our packages. We can do it updating `metro.config.js`:
+
+<pre>
+/**
+ * Metro configuration for React Native
+ * https://github.com/facebook/react-native
+ *
+ * @format
+ */
+const path = require('path');
+const watchFolders = [
+  //Relative path to packages directory
+  path.resolve(__dirname + '/..'),
+];
+
+module.exports = {
+  transformer: {
+    getTransformOptions: async () => ({
+      transform: {
+        experimentalImportSupport: false,
+        inlineRequires: false,
+      },
+    }),
+  },
+  watchFolders,
+};
+</pre>
+
+I have go this ideia [here](https://medium.com/@dushyant_db/how-to-use-lerna-with-react-native-1eaa79b5d8ec)
+
+<pre>
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ *
+ * Generated with the TypeScript template
+ * https://github.com/react-native-community/react-native-template-typescript
+ *
+ * @format
+ */
+
+import React from 'react';
+import {SafeAreaView, ScrollView, View, Text, StatusBar} from 'react-native';
+
+import {allBooks} from '@mr/utils';
+import {IBook} from '@mr/types';
+
+const App = () => {
+  const books = allBooks();
+  console.log('Books: ', books);
+  return (
+    <>
+      <StatusBar barStyle="dark-content" />
+      <SafeAreaView>
+        <ScrollView contentInsetAdjustmentBehavior="automatic">
+          {allBooks().map(function renderBook(book: IBook): JSX.Element {
+            return (
+              <View key={book.id}>
+                <Text>{book.title}</Text>
+                <Text>{book.author}</Text>
+                <Text>{book.tag}</Text>
+              </View>
+            );
+          })}
+        </ScrollView>
+      </SafeAreaView>
+    </>
+  );
+};
+
+export default App;
+
+</pre>
