@@ -1,6 +1,6 @@
 {
   "name": "@mr/mobile",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -10,8 +10,8 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@mr/types": "^0.0.1",
-    "@mr/utils": "^0.0.1",
+    "@mr/types": "^0.1.1",
+    "@mr/utils": "^0.1.1",
     "react": "16.13.1",
     "react-native": "0.63.3"
   },
