@@ -630,7 +630,7 @@ yarn login
 We should now be able to publish our packages with lerna using:
 
 ```bash
-yarn lerna publish from-package
+yarn lerna publish
 ```
 
 Not sure why, but I needed to setup the git repository and before any publish lerna ask me to commit any change, which makes sense.
@@ -1185,6 +1185,8 @@ Next, I want to create a library for react-native components. And, after that pl
 
 ### React Native Library with Typescript
 
+At packages:
+
 ```bash
 npx tsdx create ui-mobile
 ```
@@ -1196,3 +1198,11 @@ Update `packages/ui-mobile/package.json` name to `@mr/ui-mobile`:
 ```json
 "name": "@mr/ui-mobile",
 ```
+
+**Why the difference here**
+
+```bash
+yarn lerna add react-native packages/mobile
+```
+
+Following:
