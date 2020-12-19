@@ -1,6 +1,7 @@
 import React from "react";
 
 import { allBooks } from "@mr/utils";
+import { BookCard } from "@mr/ui-web";
 
 function App() {
   return (
@@ -10,7 +11,7 @@ function App() {
         {allBooks().map(function renderBook(book) {
           return (
             <li key={book.id}>
-              {book.title} from {book.author} about {book.tag || ""}
+              <BookCard book={book} />
             </li>
           );
         })}

@@ -1000,6 +1000,8 @@ I have changed the `worksapces` property in our root `package.json` to:
 }
 </pre>
 
+22nd December, 2020
+
 #### Graph depedencies
 
 https://www.npmjs.com/package/lerna-dependency-graph
@@ -1039,3 +1041,158 @@ yarn add -WD graphviz-cli canvas open-cli
     "graph": "yarn graph:specs && yarn graph:png && yarn graph:preview"
   },
 </pre>
+
+23rd December, 2020
+
+### React Library with Typescript
+
+### TSDX
+
+https://github.com/formium/tsdx
+
+```bash
+npx tsdx create ui-web
+```
+
+I going to choose the template:
+
+```
+react-with-storybook
+```
+
+I will talk about storybook in another post. It will take some time to create the library
+
+**Talk about:**
+
+```
+I already ran yarn install for you, so your next steps are:
+cd ui-web
+
+To start developing (rebuilds on changes):
+yarn start
+
+To build for production:
+yarn build
+
+To test your library with Jest:
+yarn test
+```
+
+Update `packages/ui-web/package.json` name to `@mr/ui-web`:
+
+```json
+"name": "@mr/ui-web",
+```
+
+### React Web Component
+
+#### Book Card
+
+For now we are going to use the inline css, but it is not the recommended. Since we are using an external lib it will need some more setup to generate an external css to be used on our application, which bundles with webpack. We will let it for another time.
+
+Another solution would be to use CSS in JS, since css is generated with javascript in runtime, it will not need extra setups in regard the build. However, I prefer to use plain css.
+
+Here, I am not taking attention to style:
+
+`src/components/BookCard/index.tsx`
+
+<pre>
+import React from &#39;react&#39;;
+
+export default function BookCard({ book }: { book: any }) {
+  console.log(&#39;Book: &#39;, book);
+  return (
+    &lt;div&gt;
+      &lt;h2&gt;{book.title}&lt;/h2&gt;
+      &lt;p&gt;{book.author}&lt;/p&gt;
+      &lt;small&gt;{book.tag}&lt;/small&gt;
+    &lt;/div&gt;
+  );
+}
+</pre>
+
+Notice, I am using the `book: any`. I will fix it later to use our own `IBook` type.
+
+`src/index.tsx`
+
+<pre>
+import BookCard from './components/BookCard';
+
+export { BookCard };
+</pre>
+
+#### SPA Build Fix
+
+Started having conflicts with spa application in regard to dependency versions. I have explain it **here**. Now, this happens with `babel-loader` and `jest`. I am going to had it to `nohoist`, clear `node_modules` and execute `yarn`:
+
+<pre>
+    "nohoist": [
+      "**/react-native",
+      "**/react-native/**",
+      "**/babel-jest",
+      "**/babel-loader",
+      "**/jest"
+    ]
+</pre>
+
+#### Use BookCard
+
+We want to use our new component in our spa application.
+
+```bash
+yarn lerna add @mr/ui-web --scope=@mr/spa
+```
+
+Lets build all in the root:
+
+```bash
+yarn lerna run build
+```
+
+Notice, thanks to Lerna our `build` execute in the correct order. It would be a nightmare if we had to do it buy hand.
+
+`packages/spa/App.js`:
+
+<pre>
+import React from &quot;react&quot;;
+
+import { allBooks } from &quot;@mr/utils&quot;;
+import { BookCard } from &quot;@mr/ui-web&quot;;
+
+function App() {
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;List of Books&lt;/h1&gt;
+      &lt;ul&gt;
+        {allBooks().map(function renderBook(book) {
+          return (
+            &lt;li key={book.id}&gt;
+              &lt;BookCard book={book} /&gt;
+            &lt;/li&gt;
+          );
+        })}
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;
+</pre>
+
+Next, I want to create a library for react-native components. And, after that play with `react-native-web`and may find a way to uniform components between web and mobile.
+
+24rd December, 2020
+
+### React Native Library with Typescript
+
+```bash
+npx tsdx create ui-mobile
+```
+
+Choose `react` template.
+
+Update `packages/ui-mobile/package.json` name to `@mr/ui-mobile`:
+
+```json
+"name": "@mr/ui-mobile",
+```

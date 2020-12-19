@@ -12,7 +12,9 @@
     "nohoist": [
       "**/react-native",
       "**/react-native/**",
-      "**/babel-jest"
+      "**/babel-jest",
+      "**/babel-loader",
+      "**/jest"
     ]
   },
   "scripts": {
