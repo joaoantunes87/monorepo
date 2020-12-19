@@ -957,7 +957,7 @@ import {IBook} from '@mr/types';
 
 const App = () => {
   const books = allBooks();
-  console.log('Books: ', books);
+  
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -1099,8 +1099,7 @@ Here, I am not taking attention to style:
 <pre>
 import React from &#39;react&#39;;
 
-export default function BookCard({ book }: { book: any }) {
-  console.log(&#39;Book: &#39;, book);
+export default function BookCard({ book }: { book: any }) {  
   return (
     &lt;div&gt;
       &lt;h2&gt;{book.title}&lt;/h2&gt;
@@ -1181,7 +1180,7 @@ export default App;
 
 Next, I want to create a library for react-native components. And, after that play with `react-native-web`and may find a way to uniform components between web and mobile.
 
-24rd December, 2020
+24th December, 2020
 
 ### React Native Library with Typescript
 
@@ -1199,10 +1198,115 @@ Update `packages/ui-mobile/package.json` name to `@mr/ui-mobile`:
 "name": "@mr/ui-mobile",
 ```
 
-**Why the difference here**
-
 ```bash
-yarn lerna add react-native packages/mobile
+yarn lerna add react-native --scope=@mr/ui-mobile --dev
 ```
 
-Following:
+```bash
+yarn lerna add @types/react-native --scope=@mr/ui-mobile --dev
+```
+
+`src/components/BookCard/index.tsx`
+
+<pre>
+import React from &#39;react&#39;;
+import { View, Text } from &#39;react-native&#39;;
+
+export default function BookCard({ book }: { book: any }) {
+
+  return (
+    &lt;View&gt;
+      &lt;Text&gt;{book.title}&lt;/Text&gt;
+      &lt;Text&gt;{book.author}&lt;/Text&gt;
+      &lt;Text&gt;{book.tag}&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+}
+</pre>
+
+Notice, I am using the `book: any`. I will fix it later to use our own `IBook` type.
+
+`src/index.tsx`
+
+<pre>
+import BookCard from './components/BookCard';
+
+export { BookCard };
+</pre>
+
+`packages/mobile/App.tsx`:
+
+<pre>
+import React from &quot;react&quot;;
+
+import { allBooks } from &quot;@mr/utils&quot;;
+import { BookCard } from &quot;@mr/ui-web&quot;;
+
+function App() {
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;List of Books&lt;/h1&gt;
+      &lt;ul&gt;
+        {allBooks().map(function renderBook(book) {
+          return (
+            &lt;li key={book.id}&gt;
+              &lt;BookCard book={book} /&gt;
+            &lt;/li&gt;
+          );
+        })}
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;
+</pre>
+
+Metro watcher with conflits among folders.
+
+**undo metro.config.js**
+
+Geting back to wml:
+
+```bash
+wml add packages/utils packages/mobile/node_modules/@mr/utils
+```
+
+```bash
+wml add packages/utils packages/mobile/node_modules/@mr/types
+```
+
+```bash
+wml add packages/ui-mobile packages/mobile/node_modules/@mr/ui-mobile
+```
+
+```bash
+wml start
+```
+
+I am with some problems, in some situations:
+Solving with wml, similar to
+
+```
+[error] unable to resolve root /Users/blah/project: directory /Users/blah/project is not watched
+```
+
+https://github.com/wix/wml/issues/1
+
+I had to do something like for two of the links:
+
+```
+watchman watch /Users/nb24696/Experiments/my-mono-repo/packages/utils
+```
+
+```
+watchman watch /Users/nb24696/Experiments/my-mono-repo/packages/ui-mobile
+```
+
+And then
+
+```bash
+wml start
+```
+
+Seems to be working well. It is not a pretty, neither, easy setup, but I think it is a minor price to pay to hot reload with react-native, hot reload is something we do not have on native development for mobile.
