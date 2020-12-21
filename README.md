@@ -640,7 +640,7 @@ After trying the command I had some problems authenticating in my local registry
 After a while I tried the following, explicitly configuring my local registry:
 
 ```bash
-yarn lerna publish from-package --yes --registry http://localhost:4873
+yarn lerna publish --yes --registry http://localhost:4873
 ```
 
 It worked, and now I have the artifacts on my local verdaccio repository. Another solution, would be Nexus. I have used it in the past, however it requires more work to set up. I will keep experimenting with Verdaccio.
