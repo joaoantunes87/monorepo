@@ -1466,6 +1466,69 @@ And start storybook:
 yarn storybook
 ```
 
+#### React Native Web and ui-shared on SPA
+
+```bash
+yarn lerna add @mr/ui-shared --scope=@mr/spa
+```
+
+We also need to add react-native-web
+
+```bash
+yarn lerna add react-native-web --scope=@mr/spa
+```
+
+Now we need to update our `packages/spa/index.js`:
+
+<pre>
+import "./index.css";
+
+import { AppRegistry } from "react-native";
+import App from "./App";
+
+AppRegistry.registerComponent("App", () => App);
+AppRegistry.runApplication("App", {
+  rootTag: document.getElementById("root"),
+});
+
+</pre>
+
+Here we are just following the instructions on `react-native-web` documentation [here](https://github.com/necolas/react-native-web#examples).
+
+And now we update `packages/spa/App.js`:
+
+<pre>
+import React from "react";
+import "./App.css";
+
+import { allBooks } from "@mr/utils";
+import { BookCard } from "@mr/ui-shared";
+
+function App() {
+  return (
+    <div>
+      <h1 className="App">List of Books</h1>
+      <ul>
+        {allBooks().map(function renderBook(book) {
+          return (
+            <li key={book.id}>
+              <BookCard book={book} />
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
+
+</pre>
+
+You can now even remove dependency for `@mr/ui-web`.
+
+The interesting thing here is we are still able to use react-dom components as we can see here with `h1` component.
+
 #### TODO
 
 Next, we start trying to use this compoment on our web and mobilwe application. Mobile first. Build libraries:
@@ -1520,5 +1583,5 @@ yarn workspace @mr/mobile add react-native-web
 Não estou a conseguir
 
 ```bash
-yarn lerna add @mr/react-native-web --scope=@mr/mobile
+yarn lerna add react-native-web --scope=@mr/mobile
 ```
