@@ -1,6 +1,6 @@
 {
   "name": "@mr/types",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "publishConfig": {
