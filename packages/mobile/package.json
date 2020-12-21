@@ -1,7 +1,11 @@
 {
   "name": "@mr/mobile",
+<<<<<<< HEAD
   "version": "0.1.2",
   "private": "true",
+=======
+  "version": "0.2.0",
+>>>>>>> d0caa37542d46436ee07184349e68f4a58a248c3
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -10,10 +14,10 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@mr/types": "^0.1.1",
-    "@mr/ui-mobile": "^0.1.0",
-    "@mr/ui-shared": "^0.1.0",
-    "@mr/utils": "^0.1.1",
+    "@mr/types": "^0.2.0",
+    "@mr/ui-mobile": "^0.2.0",
+    "@mr/ui-shared": "^0.2.0",
+    "@mr/utils": "^0.2.0",
     "react": "16.13.1",
     "react-native": "0.63.3"
   },
