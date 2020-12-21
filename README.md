@@ -1423,7 +1423,9 @@ I have found this suggestion [here](https://github.com/necolas/react-native-web/
 
 We want to be able to test and visualize our ui compoments idependently, without needing to have a full application. For That we use storybook.
 
-Update `stories/BookCard.stories.tsx`:
+Removed `stories/Things.stories.tsx`.
+
+Created `stories/BookCard.stories.tsx`:
 
 <pre>
 import React from 'react';
@@ -1466,7 +1468,7 @@ And start storybook:
 yarn storybook
 ```
 
-Now, we clear `examples` project, since we will be using `storybook` to see our components working.
+Now, we clear `examples` project, since we will be using `storybook` to see our components working. Also, removed `packages/ui-shared/test/blah.test.tsx`. It was using some boilerplates not existing anymore.
 
 #### React Native Web and ui-shared on SPA
 
