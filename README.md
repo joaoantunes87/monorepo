@@ -1466,6 +1466,8 @@ And start storybook:
 yarn storybook
 ```
 
+Now, we clear `examples` project, since we will be using `storybook` to see our components working.
+
 #### React Native Web and ui-shared on SPA
 
 ```bash
