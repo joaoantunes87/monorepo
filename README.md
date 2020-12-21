@@ -1344,3 +1344,122 @@ module.exports = {
 </pre>
 
 **TODO: To experiment.**
+
+##### React Native Web
+
+Go to `packages` folder:
+
+´´´
+npx tsdx create ui-shared
+´´´
+
+React with StoryBook template
+
+Update `/packages/ui-shared/package.json` name:
+
+```json
+"name": "@mr/ui-shared",
+```
+
+Update `/packages/ui-shared/example/package.json` name:
+
+```json
+"name": "@mr/ui-shared-example",
+```
+
+External dependency for react-native-web:
+
+```bash
+yarn lerna add react-native-web --scope=@mr/ui-shared
+```
+
+```bash
+yarn lerna add @types/react-native --scope=@mr/ui-shared --dev
+```
+
+`src/components/BookCard/index.tsx`
+
+<pre>
+import React from &#39;react&#39;;
+import { View, Text } from &#39;react-native-web&#39;;
+
+export default function BookCard({ book }: { book: any }) {
+
+  return (
+    &lt;View&gt;
+      &lt;Text&gt;{book.title}&lt;/Text&gt;
+      &lt;Text&gt;{book.author}&lt;/Text&gt;
+      &lt;Text&gt;{book.tag}&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+}
+</pre>
+
+Notice, I am using the `book: any`. I will fix it later to use our own `IBook` type.
+
+`src/index.tsx`
+
+<pre>
+import BookCard from './components/BookCard';
+
+export { BookCard };
+</pre>
+
+To avoid having typescript problems with `react-native-web` linked `@types/react-native` this way. On `packages/ui-shared`:
+
+```bash
+yarn add -D @types/react-native-web@npm:@types/react-native
+```
+
+I have found this suggestion [here](https://github.com/necolas/react-native-web/issues/832#issuecomment-381686680)
+
+#### Storybook
+
+We want to be able to test and visualize our ui compoments idependently, without needing to have a full application. For That we use storybook.
+
+Update `stories/BookCard.stories.tsx`:
+
+<pre>
+import React from 'react';
+import { Meta, Story } from '@storybook/react';
+import { BookCard } from '../src';
+
+const meta: Meta = {
+  title: 'BookCard',
+  component: BookCard,
+  argTypes: {
+    book: {
+      title: 'text',
+      author: 'text',
+      tag: 'text',
+      defaultValue: {
+        title: "Clean Code", author: 'Uncle Bob', tag: 'software'
+      }
+    },
+  },
+  parameters: {    
+    controls: { expanded: true },
+  },
+};
+
+export default meta;
+
+const Template: Story<any> = args => <BookCard {...args} />;
+
+// By passing using the Args format for exported stories, you can control the props for a component for reuse in a test
+// https://storybook.js.org/docs/react/workflows/unit-testing
+export const Default = Template.bind({});
+
+Default.args = {}; 
+
+</pre>
+
+And start storybook:
+
+```
+yarn storybook
+```
+
+#### TODO
+
+Next, we start trying to use this compoment on our web and mobilwe application. Mobile first
