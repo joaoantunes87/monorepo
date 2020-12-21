@@ -1234,6 +1234,12 @@ import BookCard from './components/BookCard';
 export { BookCard };
 </pre>
 
+An
+
+```bash
+yarn lerna add @mr/ui-mobile --scope=@mr/mobile
+```
+
 `packages/mobile/App.tsx`:
 
 <pre>
@@ -1370,7 +1376,7 @@ Update `/packages/ui-shared/example/package.json` name:
 External dependency for react-native-web:
 
 ```bash
-yarn lerna add react-native-web --scope=@mr/ui-shared
+yarn lerna add react-native-web --scope=@mr/ui-shared --dev
 ```
 
 ```bash
@@ -1462,4 +1468,57 @@ yarn storybook
 
 #### TODO
 
-Next, we start trying to use this compoment on our web and mobilwe application. Mobile first
+Next, we start trying to use this compoment on our web and mobilwe application. Mobile first. Build libraries:
+
+```bash
+yarn lerna run build
+```
+
+```bash
+yarn lerna add @mr/ui-shared --scope=@mr/mobile
+```
+
+WML link
+
+```bash
+wml add packages/ui-shared packages/mobile/node_modules/@mr/ui-shared
+```
+
+Make sure WML is working. If not execute:
+
+```bash
+wml start
+```
+
+Also needed to do the following on the root of repository. I seem to be with some problems in regard to `watchman`.
+
+```
+watchman watch packages/ui-shared
+```
+
+**FIXME**
+Estou com vários problemas a linkar as libs no react-native. Sempre que adiciono uma nova lib é um problema. COMO RESOLVER ISTO E FAZER DEVELOPER / USER FRIENDLY
+
+error: Error: Unable to resolve module `react-native-web` from `node_modules/@mr/ui-shared/dist/ui-shared.cjs.production.min.js`: react-native-web could not be found within the project or in these directories:
+../../node_modules
+
+Trying the following
+
+- react-native-web moved to dev on ui-shared
+- -react-native-web needs to be installed on mobile
+
+Lerna does not have a remove command, the opposite of yarn add :\
+
+Using
+yarn workspace @mr/ui-shared remove react-native-web
+
+https://github.com/lerna/lerna/issues/1886
+
+Install on mobile
+yarn workspace @mr/mobile add react-native-web
+
+Não estou a conseguir
+
+```bash
+yarn lerna add @mr/react-native-web --scope=@mr/mobile
+```
