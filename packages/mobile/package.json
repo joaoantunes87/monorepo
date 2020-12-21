@@ -1,11 +1,7 @@
 {
   "name": "@mr/mobile",
-<<<<<<< HEAD
   "version": "0.1.2",
   "private": "true",
-=======
-  "version": "0.2.0",
->>>>>>> d0caa37542d46436ee07184349e68f4a58a248c3
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
