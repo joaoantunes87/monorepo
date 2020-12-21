@@ -1310,3 +1310,37 @@ wml start
 ```
 
 Seems to be working well. It is not a pretty, neither, easy setup, but I think it is a minor price to pay to hot reload with react-native, hot reload is something we do not have on native development for mobile.
+
+**NOTE**
+**TRYIED; BUT COULD NOT SOLVE THE PROBLEM**
+
+Review this problem again. Watchman was alerting to problems because we have to packages with "example" name. This happens due to the `tsdx` template, which supplies an `èxample` at `èxample`. The ideia of this project is to be a playground to see how to use the code we are distributing with corresponding library.
+
+Trying to solve it going to each `example/package.json` and updating its `name` and `private` to `true`to avoid it be published by Lerna. For example:
+```packages/ui-web/example/package.json`:
+"name": "@mr/ui-web-example",
+"private": "true",
+
+Put back `metro.configs.js`:
+
+<pre>
+const path = require('path');
+const watchFolders = [
+  //Relative path to packages directory
+  path.resolve(__dirname + '/..'),
+];
+
+module.exports = {
+  transformer: {
+    getTransformOptions: async () => ({
+      transform: {
+        experimentalImportSupport: false,
+        inlineRequires: false,
+      },
+    }),
+  },
+  watchFolders,
+};
+</pre>
+
+**TODO: To experiment.**

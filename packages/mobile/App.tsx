@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, ScrollView, View, Text, StatusBar} from 'react-native';
+import {SafeAreaView, ScrollView, StatusBar} from 'react-native';
 
 import {allBooks} from '@mr/utils';
 import {IBook} from '@mr/types';
