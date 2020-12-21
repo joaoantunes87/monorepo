@@ -1470,6 +1470,12 @@ yarn storybook
 
 Now, we clear `examples` project, since we will be using `storybook` to see our components working. Also, removed `packages/ui-shared/test/blah.test.tsx`. It was using some boilerplates not existing anymore.
 
+Removing `react-dom`dependencies, since it is not needed here anymore:
+
+```bash
+yarn workspace @mr/ui-shared remove react-dom @types/react-dom
+```
+
 #### React Native Web and ui-shared on SPA
 
 ```bash
