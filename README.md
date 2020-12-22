@@ -1539,6 +1539,13 @@ You can now even remove dependency for `@mr/ui-web`.
 
 The interesting thing here is we are still able to use react-dom components as we can see here with `h1` component.
 
+### React Native Web on Mobile package
+
+yarn lerna add react-native-web --scope=@mr/mobile
+yarn lerna add react-dom --scope=@mr/mobile
+
+Is needed to have react-dom installed on react-native app due to react-native-web?
+
 #### TODO
 
 Next, we start trying to use this compoment on our web and mobilwe application. Mobile first. Build libraries:
