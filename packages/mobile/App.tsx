@@ -3,11 +3,11 @@ import {SafeAreaView, ScrollView, StatusBar} from 'react-native';
 
 import {allBooks} from '@mr/utils';
 import {IBook} from '@mr/types';
-import {BookCard} from '@mr/ui-mobile';
+import {BookCard} from '@mr/ui-shared';
 
 const App = () => {
   const books = allBooks();
-  console.log('Books: ', books);
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
