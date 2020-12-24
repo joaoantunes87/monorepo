@@ -6,8 +6,6 @@ import {IBook} from '@mr/types';
 import {BookCard} from '@mr/ui-shared';
 
 const App = () => {
-  const books = allBooks();
-
   return (
     <>
       <StatusBar barStyle="dark-content" />
