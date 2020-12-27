@@ -1608,7 +1608,7 @@ yarn lerna add postcss --scope=@mr/mobile
 **https://github.com/postcss/postcss/wiki/PostCSS-8-for-end-users#rollup**
 
 ```bash
-yarn lerna add rollup-plugin-postcss --scope=@mr/ui-web --dev
+yarn lerna add postcss --scope=@mr/ui-web --dev
 ```
 
 **https://www.npmjs.com/package/rollup-plugin-postcss**
@@ -1733,3 +1733,62 @@ declare module '*.css' {
 
 But would like to havfe this plugin working:
 **https://github.com/mrmckeb/typescript-plugin-css-modules**
+
+#### React Navigation
+
+```bash
+yarn lerna add @react-navigation/native --scope=@mr/mobile
+```
+
+```bash
+yarn lerna add react-native-reanimated --scope=@mr/mobile
+```
+
+```bash
+yarn lerna add react-native-gesture-handler --scope=@mr/mobile
+```
+
+```bash
+yarn lerna add react-native-screens --scope=@mr/mobile
+```
+
+```bash
+yarn lerna add react-native-safe-area-context --scope=@mr/mobile
+```
+
+```bash
+yarn lerna add @react-native-community/masked-view --scope=@mr/mobile
+```
+
+```bash
+yarn lerna add @react-navigation/stack --scope=@mr/mobile
+```
+
+https://medium.com/@ratebseirawan/react-native-0-63-monorepo-walkthrough-36ea27d95e26
+
+Experimentei esta abordagem:
+https://medium.com/@ratebseirawan/react-native-0-63-monorepo-walkthrough-36ea27d95e26
+
+Consigo ter a aplicação a funcionar. Mas quando experimento react-navigation, tenho problemas logo quando tento fazer o
+import 'react-native-gesture-handler';
+
+Estou a seguir as instruções do react-navigation.
+
+Está a ser frustrante isto. Próximos passos:
+
+- Experimentar outra biblioteca react-native para ver se acontece o mesmo;
+- Pergunta stack overflow
+- Experimentar instalar react-navigation numa app limpa para ter a certeza que é algo relacionado com o mono repo
+
+Consegui que funcionasses com styled-components. Vou experimentar outras bibliotecas. No entanto, acontece o hot reload deixar de funcionar. Faço uma alteração, no App.tsx e não faz o reload automáticamente. Mesmo com debug desligado.
+
+Experimentar react-router-native:
+https://reactrouter.com/native/guides/quick-start
+
+Rever questão do hot reload numa aplicação externa de raiz
+
+Tenho de experimentar em Android depois também.
+
+yarn add react-native-reanimated react-native-gesture-handler react-native-screens react-native-safe-area-context @react-native-community/masked-view
+
+npx pod-install ios
