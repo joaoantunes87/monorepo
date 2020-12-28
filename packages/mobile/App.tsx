@@ -1,5 +1,6 @@
 import React from 'react';
 import {SafeAreaView, ScrollView, StatusBar} from 'react-native';
+// import {NavigationContainer} from '@react-navigation/native';
 
 import {allBooks} from '@mr/utils';
 import {IBook} from '@mr/types';
