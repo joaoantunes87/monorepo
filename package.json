@@ -12,6 +12,7 @@
     "nohoist": [
       "**/react-native",
       "**/react-native/**",
+      "**/react-native-gesture-handler",
       "**/babel-jest",
       "**/babel-loader",
       "**/jest"
