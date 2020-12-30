@@ -1,23 +1,25 @@
-/**
- * Metro configuration for React Native
- * https://github.com/facebook/react-native
- *
- * @format
- */
 const path = require('path');
-const watchFolders = [
-  path.resolve(__dirname + '/../../node_modules'),
-  path.resolve(__dirname + '/..'),
-];
 
-module.exports = {
+const reactNativePath = require.resolve('react-native');
+const reactNativeFolder = `${
+  reactNativePath.split('node_modules/react-native/')[0]
+}node_modules/react-native/`;
+
+const getConfig = async () => ({
+  watchFolders: [path.resolve(__dirname, '../../')],
   transformer: {
     getTransformOptions: async () => ({
-      transform: {
-        experimentalImportSupport: false,
-        inlineRequires: false,
-      },
+      transform: {experimentalImportSupport: false, inlineRequires: false},
     }),
   },
-  watchFolders,
-};
+  resolver: {
+    blacklistRE: new RegExp(
+      `^((?!${reactNativeFolder.replace(
+        '/',
+        '\\/',
+      )}).)*\\/node_modules\\/react-native\\/.*$`,
+    ),
+  },
+});
+
+module.exports = getConfig();

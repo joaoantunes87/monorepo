@@ -1,12 +1,17 @@
 digraph G {
-  "@mr/mobile";
+  "@mr/mobile" [ style = "dashed" ];
   "@mr/types";
+  "@mr/ui-mobile";
+  "@mr/ui-shared";
   "@mr/utils";
-  "@mr/spa";
+  "@mr/spa" [ style = "dashed" ];
   "@mr/ui-web";
   "@mr/mobile" -> "@mr/types";
+  "@mr/mobile" -> "@mr/ui-mobile";
+  "@mr/mobile" -> "@mr/ui-shared";
   "@mr/mobile" -> "@mr/utils";
   "@mr/spa" -> "@mr/types";
+  "@mr/spa" -> "@mr/ui-shared";
   "@mr/spa" -> "@mr/ui-web";
   "@mr/spa" -> "@mr/utils";
   "@mr/utils" -> "@mr/types";
