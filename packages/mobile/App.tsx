@@ -1,14 +1,8 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  Text,
-  View,
-  Pressable,
-} from 'react-native';
+import {ScrollView, Text, View, Pressable} from 'react-native';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import Snackbar from 'react-native-snackbar';
 
 import {allBooks} from '@mr/utils';
 import {IBook} from '@mr/types';
@@ -21,6 +15,11 @@ function HomeScreen() {
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Pressable
         onPress={() => {
+          Snackbar.show({
+            text: 'Hello world',
+            duration: Snackbar.LENGTH_LONG,
+          });
+
           navigate('Books');
         }}>
         <Text>Go to Books</Text>
